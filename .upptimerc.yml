@@ -1,0 +1,67 @@
+# Concertos status page (Upptime). Runs entirely on GitHub: Actions checks every 5 minutes,
+# Pages serves the page at status.concertos.live. Nothing here touches the Concertos server
+# except the checks below. Staff post incidents and maintenance as the organisation's app, never personally.
+owner: concertos-status
+repo: status
+user-agent: concertos-status
+
+# No other secrets are needed; an explicit empty list passes none to the checks.
+secrets: []
+
+sites:
+  # The website: a page that needs PHP, the database and sessions. 503 in maintenance mode.
+  - name: Website
+    slug: website
+    url: https://concertos.live/login
+    expectedStatusCodes:
+      - 200
+    maxResponseTime: 5000
+
+  # The tracker: a dummy announce, answered cheaply in bencode ("Invalid request") by
+  # AnnounceController. nginx's 502/503 when PHP or the site is down has no "failure reason".
+  - name: Tracker
+    slug: tracker
+    url: https://concertos.live/announce/status-check
+    expectedStatusCodes:
+      - 200
+    __dangerous__body_down_if_text_missing: "failure reason"
+    maxResponseTime: 5000
+
+  # IRC (ngIRCd, TLS port). irc.concertos.live still points to the old server (issue #8).
+  - name: IRC
+    slug: irc
+    check: tcp-ping
+    url: concertos.live
+    port: 6697
+
+  # The chatbox's live connection (laravel-echo-server).
+  - name: Live chat
+    slug: chat
+    check: tcp-ping
+    url: concertos.live
+    port: 8443
+
+status-website:
+  cname: status.concertos.live
+  name: Concertos Status
+  logoUrl: /logo.png
+  favicon: /favicon.png
+  introTitle: "**Concertos** status"
+  introMessage: >-
+    This page runs separately from Concertos, so it stays up when the site doesn't.
+    It checks the website, the tracker, IRC and the live chat every few minutes,
+    and staff post planned maintenance and updates on outages here.
+  navbar:
+    - title: Status
+      href: /
+    - title: Concertos
+      href: https://concertos.live
+  theme: light
+  # A private tracker's status page doesn't need to be in search engines.
+  robotsText: "User-agent: *\nDisallow: /"
+  metaTags:
+    - name: robots
+      content: noindex, nofollow
+
+i18n:
+  footer: "Checks run every 5 minutes. Powered by [Upptime](https://upptime.js.org)."
