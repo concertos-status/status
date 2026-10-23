@@ -44,8 +44,8 @@ sites:
 status-website:
   cname: status.concertos.live
   name: Concertos Status
-  logoUrl: /logo.png
-  favicon: /favicon.png
+  logoUrl: https://raw.githubusercontent.com/concertos-status/status/master/assets/logo.png
+  favicon: https://raw.githubusercontent.com/concertos-status/status/master/assets/favicon.png
   introTitle: "**Concertos** status"
   introMessage: >-
     This page runs separately from Concertos, so it stays up when the site doesn't.
