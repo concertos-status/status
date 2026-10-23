@@ -12,6 +12,7 @@ sites:
   # The website: a page that needs PHP, the database and sessions. 503 in maintenance mode.
   - name: Website
     slug: website
+    icon: https://raw.githubusercontent.com/concertos-status/status/master/assets/favicon.png
     url: https://concertos.live/login
     expectedStatusCodes:
       - 200
@@ -21,6 +22,7 @@ sites:
   # AnnounceController. nginx's 502/503 when PHP or the site is down has no "failure reason".
   - name: Tracker
     slug: tracker
+    icon: https://raw.githubusercontent.com/concertos-status/status/master/assets/favicon.png
     url: https://concertos.live/announce/status-check
     expectedStatusCodes:
       - 200
@@ -30,6 +32,7 @@ sites:
   # IRC (ngIRCd, TLS port). irc.concertos.live still points to the old server (issue #8).
   - name: IRC
     slug: irc
+    icon: https://raw.githubusercontent.com/concertos-status/status/master/assets/favicon.png
     check: tcp-ping
     url: concertos.live
     port: 6697
@@ -37,6 +40,7 @@ sites:
   # The chatbox's live connection (laravel-echo-server).
   - name: Live chat
     slug: chat
+    icon: https://raw.githubusercontent.com/concertos-status/status/master/assets/favicon.png
     check: tcp-ping
     url: concertos.live
     port: 8443
@@ -56,7 +60,78 @@ status-website:
       href: /
     - title: Concertos
       href: https://concertos.live
-  theme: light
+  # No theme: Upptime follows the device's light/dark setting, and the css below maps its
+  # variables to the site's Light V1 / Dark V1 tokens (site/resources/sass/concertos/_tokens.scss).
+  # Fonts are the site's own (SIL OFL), in assets/fonts, served from this page, not from concertos.live.
+  css: |
+    @font-face{font-family:'Geist';font-style:normal;font-weight:100 900;font-display:swap;src:url('/fonts/geist-latin-wght-normal.woff2') format('woff2-variations')}
+    @font-face{font-family:'Geist';font-style:normal;font-weight:100 900;font-display:swap;src:url('/fonts/geist-latin-ext-wght-normal.woff2') format('woff2-variations');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1EFF,U+2020,U+20A0-20C0,U+2C60-2C7F,U+A720-A7FF}
+    @font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/instrument-serif-latin-400-normal.woff2') format('woff2')}
+    :root{
+      --bg:#f6f4ef;--panel:#fffdf9;--soft:#efebe2;--line:#e4dfd4;--ink:#1b1a17;--mute:#6b675e;
+      --acc:#c78b28;--acc-text:#875814;--acc-ink:#1b1408;--good:#1d7d3e;--bad:#c13c3b;--bad-soft:rgb(193 60 59 / .08);
+      --graph-hue:hue-rotate(-128deg) saturate(.9);--graph-opacity:.5;
+      --font-display:'Instrument Serif','Times New Roman',Georgia,serif;
+      --font-ui:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;
+    }
+    @media (prefers-color-scheme:dark){:root{
+      --bg:#121211;--panel:#1a1a18;--soft:#232220;--line:#2c2b28;--ink:#eeebe4;--mute:#9d988d;
+      --acc:#e3ad4b;--acc-text:#edbb64;--acc-ink:#171106;--good:#62c37a;--bad:#f47b74;--bad-soft:rgb(244 123 116 / .14);
+      --graph-hue:hue-rotate(-128deg) saturate(.9);--graph-opacity:.3;
+    }}
+    :root{
+      color-scheme:light dark;
+      --body-background-color:var(--bg);--body-text-color:var(--ink);
+      --card-background-color:var(--panel);--card-border-color:var(--line);
+      --nav-background-color:var(--panel);--nav-border-bottom-color:var(--line);--nav-current-border-bottom-color:var(--acc);
+      --up-border-left-color:var(--good);--down-border-left-color:var(--bad);--down-background-color:var(--bad-soft);
+      --degraded-border-left-color:var(--acc);--change-background-color:var(--acc);
+      --tag-color:var(--panel);--tag-up-background-color:var(--good);--tag-down-background-color:var(--bad);--tag-degraded-background-color:var(--acc);
+      --error-button-border-color:var(--acc);--error-button-background-color:var(--acc);--error-button-color:var(--acc-ink);
+      --submit-button-border-color:var(--acc);--submit-button-background-color:var(--acc);--submit-button-color:var(--acc-ink);
+    }
+    body{font-family:var(--font-ui);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    main a:not(article.link h4 a){color:var(--acc-text)}
+    nav{font-weight:400}
+    nav .logo{font-weight:400}
+    nav .logo img{height:2.25rem;border-radius:8px}
+    nav .logo{margin-right:1rem}
+    nav .logo div{font-size:0}
+    nav .logo div::before{content:'Concertos';font-family:var(--font-display);font-size:28px;letter-spacing:-.01em}
+    nav .logo div::after{content:'.';font-family:var(--font-display);font-size:28px;color:var(--acc)}
+    nav ul a{padding:1.4rem 1.25rem;font-size:14px;color:var(--mute)}
+    nav ul a[aria-current]{color:var(--ink)}
+    h1,h2{font-family:var(--font-display);font-weight:400;letter-spacing:-.01em;line-height:1.05}
+    header h1{font-size:52px;margin-bottom:.35em}
+    header h1 strong{font-weight:400}
+    header h1::after{content:'.';color:var(--acc)}
+    p.lead{font-size:16px;color:var(--mute);max-width:40em}
+    h2{font-size:32px}
+    h3{opacity:1;color:var(--mute);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:1.25rem}
+    h4{font-weight:600}
+    article{border-radius:12px;border-color:var(--line)}
+    article.up,article.down,article.degraded{border-left-width:3px}
+    article + article{margin-top:.6rem}
+    .data{font-variant-numeric:tabular-nums}
+    form.r label{font-size:13px;color:var(--mute);cursor:pointer;padding:.2rem .55rem;border-radius:999px;margin-left:.35rem}
+    form.r input:checked+label{background:var(--soft);color:var(--ink);font-weight:500}
+    article.graph{background-image:none!important;overflow:hidden}
+    article.graph::before{content:'';position:absolute;inset:0;background:var(--background) no-repeat center right/contain;filter:var(--graph-hue);opacity:var(--graph-opacity);pointer-events:none}
+    main canvas{filter:var(--graph-hue)}
+    article.graph > *{position:relative}
+    .tag{font-family:var(--font-ui);font-size:12px;letter-spacing:0;border-radius:999px;font-weight:600;padding:.3rem .65rem;vertical-align:.4em}
+    h1 a{text-decoration:none;color:var(--ink)!important}
+    footer{color:var(--mute);font-size:13px;opacity:1}
+    @media (max-width:560px){
+      nav{padding:0 .5rem}
+      nav .logo img{height:2rem}
+      nav .logo div::before,nav .logo div::after{font-size:24px}
+      nav ul a{padding:1.2rem .6rem}
+      header h1{font-size:40px}
+      article.graph::before{opacity:calc(var(--graph-opacity) * .5)}
+    }
+    @media (max-width:420px){nav .logo div{display:none}}
   # A private tracker's status page doesn't need to be in search engines.
   robotsText: "User-agent: *\nDisallow: /"
   metaTags:
@@ -64,4 +139,6 @@ status-website:
       content: noindex, nofollow
 
 i18n:
+  liveStatus: "Live status"
+  pastScheduledMaintenance: "Past maintenance"
   footer: "Checks run every 5 minutes. Powered by [Upptime](https://upptime.js.org)."
